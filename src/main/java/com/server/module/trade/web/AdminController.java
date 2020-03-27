@@ -1072,6 +1072,7 @@ public class AdminController {
 			newUser.setCreateTime(new Date());
 			newUser.setUpdateTime(new Date());
 			newUser.setCompanyId(83);
+			newUser.setVmCode("1999000111");
 			newUser = userService.insert(newUser);
 			// 根据华发用户信息生成token
 			String userCompanyId = newUser.getId().toString()+",0"+","+newUser.getPhone();
