@@ -80,7 +80,7 @@ public class HttpUtil {
 			HttpEntity valueEntity = new StringEntity(jsonParam,"UTF-8");
 			post.setEntity(valueEntity);
 			//设置连接超时
-			RequestConfig config = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(5000).build();
+			RequestConfig config = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();
 			post.setConfig(config);
 			response = client.execute(post);
 			if(response.getStatusLine().getStatusCode() == 200){

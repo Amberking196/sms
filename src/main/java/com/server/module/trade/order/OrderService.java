@@ -124,4 +124,13 @@ public interface OrderService {
 	 * @return
 	 */
 	public void updatePayState(String ptCode, String payCode, Integer state, Integer Type);
+
+	/**
+	 * 根据payCode查询公司id
+	 * @author why
+	 * @date 2019年3月16日 上午11:31:36
+	 * @param payCode
+	 * @return
+	 */
+	public Integer getCompanyIdByPayCode(String payCode);
 }

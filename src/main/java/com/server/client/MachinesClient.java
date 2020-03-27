@@ -51,12 +51,13 @@ public class MachinesClient {
 //			log.error("URISyntaxException",e);
 //			e.printStackTrace();
 //		}
-		//String url="https://devapp.huafatech.com/app/water/orderInfo/createWaterOrderInfo";
-		String url="http://localhost:8099/order/returnOrder";
+		String url="https://devapp.huafatech.com/app/water/orderInfo/createWaterOrderInfo";
+		//String url="http://localhost:8099/order/returnOrder";
 		for(int i=0;i<times;i++){
 			back = HttpUtil.post(url,json);
+			log.info(json);
 			HuaFaResult huaFaResult = JSON.parseObject(back,HuaFaResult.class);
-			log.info("sendingPayFinishOrder"+payCode);
+			log.info("sendingPayFinishOrder:"+payCode);
 			if(huaFaResult !=null && huaFaResult.getSuccess().equals("true")){
 				log.info(i+"发送成功");
 				redisService.del(payCode);

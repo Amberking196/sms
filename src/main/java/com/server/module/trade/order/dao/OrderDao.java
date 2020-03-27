@@ -55,14 +55,14 @@ public class OrderDao extends BaseDao {
 				bean.setState(rs.getInt("state"));
 				bean.setNowprice(rs.getBigDecimal("nowprice"));
 				bean.setPayCode(rs.getString("payCode"));
-				bean.setCreateTime(rs.getTime("createTime"));
+				bean.setCreateTime(rs.getTimestamp("createTime"));
 				bean.setType(rs.getInt("type"));
 				bean.setCustomerId(rs.getLong("customerId"));
 				bean.setPrice(rs.getBigDecimal("price"));
 				bean.setPayType(rs.getInt("payType"));
 				bean.setPtCode(rs.getString("ptCode"));
 				bean.setProduct(rs.getString("product"));
-				bean.setPayTime(rs.getTime("payTime"));
+				bean.setPayTime(rs.getTimestamp("payTime"));
 				bean.setStateName(PayStateEnum.findStateName(rs.getInt("state")));
 			}
 			data.setStatus(1);
@@ -555,5 +555,36 @@ public class OrderDao extends BaseDao {
 			this.closeConnection(null, pst, conn);
 		}
 		return false;
+	}
+	/**
+	 * 根据payCode查询公司id
+	 * @author why
+	 * @date 2019年3月16日 上午11:25:44
+	 * @param payCode
+	 * @return
+	 */
+	public Integer getCompanyIdByPayCode(String payCode) {
+		log.info("<OrderDaoImpl>-----<getCompanyIdByPayCode>--start>");
+		StringBuffer sql = new StringBuffer();
+		sql.append(" select companyId from store_order where payCode='" + payCode + "' ");
+		log.info("根据payCode查询公司id sql语句：" + sql);
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Integer companyId = null;
+		try {
+			conn = openConnection();
+			ps = conn.prepareStatement(sql.toString());
+			rs = ps.executeQuery();
+			while (rs != null && rs.next()) {
+				companyId = rs.getInt("companyId");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.closeConnection(rs, ps, conn);
+		}
+		log.info("<OrderDaoImpl>-----<getCompanyIdByPayCode>--end>");
+		return companyId;
 	}
 }

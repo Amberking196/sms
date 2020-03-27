@@ -1,5 +1,6 @@
 package com.server.module.store;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.server.common.persistence.Entity;
 import com.server.common.persistence.NotField;
 import lombok.Data;
@@ -27,8 +28,10 @@ public class OrderBean {
    //收货地址
 	private String location;
    //订单创建时间
+   @JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
    //订单支付时间
+   @JSONField(format = "yyyy-MM-dd HH:mm:ss")
 	private Date payTime;
    //发货时间
 	private Date deliverTime;
