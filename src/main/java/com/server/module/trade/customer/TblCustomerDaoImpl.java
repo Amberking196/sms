@@ -270,7 +270,7 @@ public class TblCustomerDaoImpl extends BaseDao<TblCustomerBean> implements TblC
 				bean.setCreateId(rs.getString("createId"));
 				bean.setUpdateTime(rs.getTimestamp("updateTime"));
 				bean.setLastUpdateId(rs.getString("lastUpdateId"));
-				bean.setLastUpdateId(rs.getString("huafaAppOpenId"));
+				bean.setHuafaAppOpenId(rs.getString("huafaAppOpenId"));
 				bean.setDeleteFlag(rs.getInt("deleteFlag"));
 				return bean;
 			}
