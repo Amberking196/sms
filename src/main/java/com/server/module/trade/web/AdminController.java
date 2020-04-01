@@ -1021,7 +1021,7 @@ public class AdminController {
 		map.put("client_id", "85ce53814bbb4681a95a093e9b3ee7e5");
 		map.put("client_secret", "29d0dd5f35cf4dcd9321d70875658484");
 		map.put("grant_type", "authorization_code");
-		map.put("redirect_uri", "http://free-tcp.svipss.top:15238/admin/huafaTokenLogin");
+		map.put("redirect_uri", "http://free-tcp.svipss.top:34731/admin/huafaTokenLogin");
 		map.put("code", code);
 		String access_json = HttpClientUtil.doPost("http://devapp.huafatech.com/app/oauth2/accessToken", map);
 		System.out.println(access_json + "=================++++==================================");
@@ -1067,9 +1067,12 @@ public class AdminController {
 			newUser.setHuafaAppOpenId(huafaAppOpenId);
 			newUser.setPhone((String) user_map.get("phone"));
 			newUser.setNickname("优生活用户" + (String) user_map.get("phone"));
+			newUser.setHeadImgUrl("http://image.biaobaiju.com/uploads/20180211/00/1518281712-wYhucKpBaG.jpg");
 			newUser.setType(6);
 			newUser.setCreateTime(new Date());
 			newUser.setUpdateTime(new Date());
+			newUser.setCompanyId(83);
+			newUser.setVmCode("1999000111");
 			newUser = userService.insert(newUser);
 			// 根据华发用户信息生成token
 			String userCompanyId = newUser.getId().toString()+",0"+","+newUser.getPhone();

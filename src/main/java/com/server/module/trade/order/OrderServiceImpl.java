@@ -1622,6 +1622,15 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 	}
+
+	@Override
+	public Integer getCompanyIdByPayCode(String payCode) {
+		log.info("<OrderServiceImpl>----<getCompanyIdByPayCode>----start>");
+		Integer companyId = orderDao.getCompanyIdByPayCode(payCode);
+		log.info("<OrderServiceImpl>----<getCompanyIdByPayCode>----end>");
+		return companyId;
+	}
+
 	public static Integer checkCodeSum(String command){
 		if(StringUtils.isNotBlank(command)){
 			int sum = 0;

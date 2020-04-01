@@ -1,6 +1,7 @@
 package com.server.module.trade.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
@@ -703,14 +704,16 @@ public class OrderController {
 			Map<String, String> map = WXPayUtil.xmlToMap(xml);
 			String outTradeNo = (String) map.get("out_trade_no");
 			outTradeNo = outTradeNo.substring(0, 25);// 获取真实订单号
-			Integer companyId = machinesService.getCompanyIdByPayCodeStore(outTradeNo);
+			//Integer companyId = machinesService.getCompanyIdByPayCodeStore(outTradeNo);;
+			Integer companyId = 1;
 			WXPayConfig wxPayConfig = wxpayConfigFactory.getWXPayConfig(companyId);
-			OrderBean ob = orderService.getMessageByPayCode(outTradeNo);
 			Integer distributionModel = orderService.getDistributionModelByPayCode(outTradeNo);
 			String result_code = (String) map.get("result_code");
 			String transactionId = (String) map.get("transaction_id");
-			boolean b = WXPayUtil.isSignatureValid(map, wxPayConfig.getAppKey());
+			boolean b = WXPayUtil.isSignatureValid(map, wxPayConfig.getKey());
 			log.info("storeNotify 结果:" + b);
+			log.info("key  的值  "+ wxPayConfig.getKey());
+			log.info("map的  值"+ map);
 			if (b) {// 订单号 25位
 				if (("SUCCESS").equals(result_code)
 						&& !("SUCCESS").equals(redisService.get(MachinesKey.orderFlag, outTradeNo))) {
@@ -725,6 +728,7 @@ public class OrderController {
 						BeanUtils.copyProperties(o, hf);
 						huaFaGoods.add(hf);
 					}
+					OrderBean ob = orderService.getMessageByPayCode(outTradeNo);
 					TblCustomerBean customer = tblCustomerService.getCustomerById(customerId);
 					Map<String, Object> huaAppMap = new HashMap<String, Object>();
 					//List<ShoppingBean> newlist = orderService.findShoppingBeandByOrderId(ob.getId(),ob.getType());
@@ -743,11 +747,12 @@ public class OrderController {
 					huaAppMap.put("ptCode", ob.getPtCode());
 					huaAppMap.put("product", ob.getProduct());
 					huaAppMap.put("phone", customer.getPhone());
-					huaAppMap.put("list", huaFaGoods);
-					String json = JSON.toJSONString(huaAppMap);//map转String
+					huaAppMap.put("buyNums",huaFaGoods.size());
+					huaAppMap.put("waterOrderDetailList", huaFaGoods);
+					String json = JSON.toJSONStringWithDateFormat(huaAppMap,"yyyy-MM-dd HH:mm:ss", SerializerFeature.WriteDateUseDateFormat);//map转String
+					//String json = JSON.toJSONString(huaAppMap);//map转String
 					//JSONObject jsonObject = JSON.parseObject(json);//String转json
 					//String a=HttpUtil.post("https://devapp.huafatech.com/app/water/orderInfo/createWaterOrderInfo", json);
-					
 					//
 					Thread t = new Thread(new Runnable(){
 						@Override

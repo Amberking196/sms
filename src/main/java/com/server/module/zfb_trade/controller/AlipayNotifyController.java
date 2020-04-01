@@ -1,6 +1,7 @@
 package com.server.module.zfb_trade.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
@@ -247,7 +248,8 @@ public class AlipayNotifyController {
 			log.info(request.getParameter("sign"));
 			String payCode = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
 			String tradeStatus = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
-			Integer companyId = machinesService.getCompanyIdByPayCode(payCode);
+			//Integer companyId = 83;
+			Integer companyId = orderService.getCompanyIdByPayCode(payCode);
 			Integer distributionModel = orderService.getDistributionModelByPayCode(payCode);
 			AlipayServiceEnvConfig alipayServiceEnv = alipayEnvFactory.getAlipayServiceEnvConfig(companyId);
 			if (AlipaySignature.rsaCheckV1(params, alipayServiceEnv.alipay_public_key, AlipayServiceEnvConfig.CHARSET_UTF8,AlipayServiceEnvConfig.SIGN_TYPE)) {
@@ -259,13 +261,13 @@ public class AlipayNotifyController {
 							String ptCode = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
 							orderService.updatePayState(ptCode,payCode,PayStateEnum.PAY_SUCCESS.getState(),0);
 							// 消费提醒
-							consumeDetail(payCode, ptCode);
+							//consumeDetail(payCode, ptCode);
 						}else {
 							redisService.set(MachinesKey.orderFlag, payCode, "SUCCESS");
 							String ptCode = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
 							orderService.updatePayState(ptCode,payCode,PayStateEnum.Delivering.getState(),0);
 							// 消费提醒
-							consumeDetail(payCode, ptCode);
+							//consumeDetail(payCode, ptCode);
 					}
 
 					OrderBean ob = orderService.getMessageByPayCode(payCode);
@@ -296,8 +298,10 @@ public class AlipayNotifyController {
 					huaAppMap.put("ptCode", ob.getPtCode());
 					huaAppMap.put("product", ob.getProduct());
 					huaAppMap.put("phone", customer.getPhone());
-					huaAppMap.put("list", huaFaGoods);
-					String json = JSON.toJSONString(huaAppMap);//map转String
+					huaAppMap.put("buyNums",huaFaGoods.size());
+					huaAppMap.put("waterOrderDetailList", huaFaGoods);
+					//String json = JSON.toJSONString(huaAppMap);//map转String
+					String json = JSON.toJSONStringWithDateFormat(huaAppMap,"yyyy-MM-dd HH:mm:ss", SerializerFeature.WriteDateUseDateFormat);//map转String
 					//JSONObject jsonObject = JSON.parseObject(json);//String转json
 					//String a=HttpUtil.post("https://devapp.huafatech.com/app/water/orderInfo/createWaterOrderInfo", json);
 					Thread t = new Thread(new Runnable(){
@@ -305,6 +309,7 @@ public class AlipayNotifyController {
 						public void run(){
 							// run方法具体重写
 							try {
+								log.info("走到这里了！！！吗");
 								machinesClient.sendHuaFa(5,payCode, json);
 							} catch (Exception e) {
 								e.printStackTrace();
