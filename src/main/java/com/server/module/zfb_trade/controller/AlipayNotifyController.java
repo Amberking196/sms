@@ -309,7 +309,6 @@ public class AlipayNotifyController {
 						public void run(){
 							// run方法具体重写
 							try {
-								log.info("走到这里了！！！吗");
 								machinesClient.sendHuaFa(5,payCode, json);
 							} catch (Exception e) {
 								e.printStackTrace();

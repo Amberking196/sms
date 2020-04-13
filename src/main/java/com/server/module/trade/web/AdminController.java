@@ -669,27 +669,28 @@ public class AdminController {
 		String cityId = param.get("cityId");
 		String vmCode = param.get("vmCode");
 		ResultBean<String> result = new ResultBean<>();
-		Integer c = machinesService.getCompanyIdByVmCode(vmCode);
-		if (c != null) {
-			//广州
-			if (Integer.parseInt(cityId) == 1) {
+		//广州
+		if (Integer.parseInt(cityId) == 1) {
+			Integer c = machinesService.getCompanyIdByVmCode(vmCode);
+			if (c != null) {
 				vmCode = param.get("vmCode");
 			}
-			//珠海
-			if (Integer.parseInt(cityId) == 2) {
-				vmCode = "1999000111";
-				//System.out.println("===================================================="+vmCode);
+		}
+		//珠海
+		if (Integer.parseInt(cityId) == 2) {
+			vmCode = "1999000111";
+			//System.out.println("===================================================="+vmCode);
+		}
+		//四川
+		if (Integer.parseInt(cityId) == 3) {
+			vmCode = "1988001672";
+		}
+		if (Integer.parseInt(cityId)==4) {
+			if (StringUtils.isBlank(vmCode)) {
+				vmCode = "1988000080";
 			}
-			//四川
-			if (Integer.parseInt(cityId) == 3) {
-				vmCode = "1988001672";
-			}
-	        if (Integer.parseInt(cityId)==4){
-	            if(StringUtils.isBlank(vmCode)){
-	                vmCode="1988000080";
-	            }
-	        }
-		} else {
+		}
+		if (StringUtils.isEmpty(vmCode)){
 			result.setCode(-99);
 			result.setMsg("机器编码错误！！！");
 			return result;
@@ -1021,7 +1022,7 @@ public class AdminController {
 		map.put("client_id", "85ce53814bbb4681a95a093e9b3ee7e5");
 		map.put("client_secret", "29d0dd5f35cf4dcd9321d70875658484");
 		map.put("grant_type", "authorization_code");
-		map.put("redirect_uri", "http://free-tcp.svipss.top:34731/admin/huafaTokenLogin");
+		map.put("redirect_uri", "http://free-tcp.svipss.top:15451/admin/huafaTokenLogin");
 		map.put("code", code);
 		String access_json = HttpClientUtil.doPost("http://devapp.huafatech.com/app/oauth2/accessToken", map);
 		System.out.println(access_json + "=================++++==================================");
